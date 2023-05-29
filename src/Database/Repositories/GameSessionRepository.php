@@ -33,27 +33,23 @@ class GameSessionRepository extends BaseRepository implements GameSessionInterfa
     
     protected static function getStrategy(): GameHandlerContract {
         if (!self::$strategy) {
-            
-            $gameKey = static::getGameKey();
-            
+            $gameKey = static::getGameSlug(); 
             $gameStrategy = config('games.catalogue.' . $gameKey . '.strategy');
             if (!is_string($gameStrategy) || !class_exists($gameStrategy)) {
                 $gameStrategy = BaseGame::class;
             }
-
             self::$strategy = new $gameStrategy();            
         }
-        
         return self::$strategy;
     }
     
-    protected static function getGameKey(): string {
+    public static function getGameSlug(): string {
         $gameKey = request()->header(HEADER_GAME_NAME);
         if (!$gameKey) {
             $gameKey = request()->get(config('games.identifier', ''));
         }
-        
-        return $gameKey;
+        return $gameKey ?? 'default';
     }
+    
 
 }
