@@ -9,7 +9,7 @@ use Tests\TestCase;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Support\Facades\Config;
-
+use Vesaka\Games\Tests\Traits\BindsGameSessionRepository;
 /**
  * Description of GameSessionTest
  *
@@ -18,19 +18,14 @@ use Illuminate\Support\Facades\Config;
 class GameSessionTest extends TestCase {
 
     use WithFaker,
-        RefreshDatabase;
+        RefreshDatabase, 
+        BindsGameSessionRepository;
     
     protected function setUp(): void {
         parent::setUp();
-        // Mock the authenticated user
         $user = User::factory()->create();
         $this->actingAs($user);
-        
-        
-        
-        // Set the session key configuration
-//        Config::set('games.identifier', '_gk');
-//        Config::set('games.session_key', 'session_id');
+        $this->bindGameSessionAlias();
     }
     
     public function test_games_config_file_exists() {
@@ -41,7 +36,7 @@ class GameSessionTest extends TestCase {
         $this->setConfigFile();
         
         Sanctum::actingAs(User::factory()->create());
-        $response = $this->json('post', '/api/play/start?_gk=unblockme');
+        $response = $this->json('post', '/api/play/start');
 
         $response->assertStatus(200);
     }
