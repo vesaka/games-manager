@@ -51,7 +51,7 @@ class GamesServiceProvider extends BaseServiceProvider {
         $this->registerAdminRoutes();
         $this->registerPackageCommands();
         
-        if (defined('HEADER_GAME_NAME')) {
+        if (!defined('HEADER_GAME_NAME')) {
             define('HEADER_GAME_NAME', 'X-Game-Type');
         }
     }
