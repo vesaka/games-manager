@@ -3,6 +3,7 @@
 namespace Vesaka\Games\Models;
 
 use Vesaka\Games\Models\Player;
+use Vesaka\Games\Models\Game;
 use Illuminate\Database\Eloquent\Model as AppModel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -39,6 +40,10 @@ class GameSession extends AppModel {
     
     protected static function newFactory(): Factory {
         return GameSessionFactory::new();
+    }
+    
+    public function game() {
+        return $this->belongsTo(Game::class, 'game_id');
     }
     
     public function player() {

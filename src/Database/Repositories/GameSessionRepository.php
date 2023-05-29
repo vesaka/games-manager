@@ -36,12 +36,11 @@ class GameSessionRepository extends BaseRepository implements GameSessionInterfa
             
             $gameKey = static::getGameKey();
             
-            $gameStrategy = config('games.catalogue.' . $gameKey, 'ClassNotExists');
-            
+            $gameStrategy = config('games.catalogue.' . $gameKey . '.strategy');
             if (!is_string($gameStrategy) || !class_exists($gameStrategy)) {
                 $gameStrategy = BaseGame::class;
             }
-            
+
             self::$strategy = new $gameStrategy();            
         }
         

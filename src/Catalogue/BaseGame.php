@@ -32,6 +32,7 @@ class BaseGame implements GameHandlerContract {
         
         $gameSession->ended_at = now();
         $gameSession->score = $this->calculate($request);
+        $gameSession->status = GameSession::COMPLETED;
         $gameSession->save();
         return $gameSession;
     }
