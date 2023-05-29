@@ -3,6 +3,7 @@ namespace Vesaka\Games\Catalogue;
 
 use Vesaka\Games\Contracts\GameHandlerContract;
 use Jenssegers\Agent\Agent;
+use Vesaka\Games\Models\Game;
 use Vesaka\Games\Models\GameSession;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -14,12 +15,13 @@ use DB;
  */
 class BaseGame implements GameHandlerContract {
     
-    protected static final function getGameId(): int {
+    public static final function getGameId(): int {
         $game = Game::select('id')
                 ->where('name', app('game.session')->getGameSlug())
-                ->first();
+                ->first(); 
         return $game ? $game->id : 0;
     }
+    
     public function begin(Request $request): GameSession {
         $gameSession = new GameSession;
         $gameSession->game_id = self::getGameId();
