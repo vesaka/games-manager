@@ -14,9 +14,15 @@ use DB;
  */
 class BaseGame implements GameHandlerContract {
     
-    
+    protected static final function getGameId(): int {
+        $game = Game::select('id')
+                ->where('name', app('game.session')->getGameSlug())
+                ->first();
+        return $game ? $game->id : 0;
+    }
     public function begin(Request $request): GameSession {
         $gameSession = new GameSession;
+        $gameSession->game_id = self::getGameId();
         $gameSession->user_id = $request->user()->id;
         $gameSession->started_at = now();
         $gameSession->payload = [];
@@ -28,6 +34,7 @@ class BaseGame implements GameHandlerContract {
     public function save(Request $request): GameSession {
         $gameSession = GameSession::where('id', $request->get(config('games.session_key')))
                         ->where('user_id', $request->user()->id)
+                        ->where('game_id', self::getGameId())
                         ->first();
         
         $gameSession->ended_at = now();
