@@ -2,11 +2,7 @@
 
 namespace Vesaka\Games\Tests\Integration\Games;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
-use App\Models\User;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Support\Facades\Config;
 use Vesaka\Games\Tests\Traits\BindsGameSessionRepository;
@@ -17,14 +13,10 @@ use Vesaka\Games\Tests\Traits\BindsGameSessionRepository;
  */
 class GameSessionTest extends TestCase {
 
-    use WithFaker,
-        RefreshDatabase, 
-        BindsGameSessionRepository;
+    use BindsGameSessionRepository;
     
     protected function setUp(): void {
         parent::setUp();
-        $user = User::factory()->create();
-        $this->actingAs($user);
         $this->bindGameSessionAlias();
     }
     
@@ -35,7 +27,7 @@ class GameSessionTest extends TestCase {
     public function test_start_game_session_request_returns_200() {
         $this->setConfigFile();
         
-        Sanctum::actingAs(User::factory()->create());
+        Sanctum::actingAs(auth()->user());
         $response = $this->json('post', '/api/play/start');
 
         $response->assertStatus(200);
