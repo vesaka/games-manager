@@ -15,13 +15,13 @@ class GameSessionController extends Controller {
     public function start(Request $request) {
         return app('game.session')
                 ->start($request)
-                ->only('id', 'user_id', 'status');
+                ->only('id', 'game_id', 'status');
     }
     
     public function end(Request $request) {
         return app('game.session')
                 ->end($request)
-                ->only('id', 'user_id', 'status');
+                ->only('id', 'game_id', 'status');
     }
     
     public function leaderboard(Request $request) {
