@@ -16,8 +16,13 @@ use DB;
 class BaseGame implements GameHandlerContract {
     
     public static final function getGameId(): int {
+        $gameKey = request()->header(HEADER_GAME_NAME);
+        if (!$gameKey) {
+            $gameKey = request()->get(config('games.identifier', '')) ?? 'default';
+        }
+        
         $game = Game::select('id')
-                ->where('name', app('game.session')->getGameSlug())
+                ->where('name', $gameKey)
                 ->first(); 
         return $game ? $game->id : 0;
     }
