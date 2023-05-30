@@ -20,12 +20,12 @@ class GameSessionCache extends BaseCache implements GameSessionInterface  {
        // return $this->tags('games', "game:$request->gid", "game_session:$request->sid");
     }
     
-    public function end(\Illuminate\Http\Request $request): GameSession {
+    public function end(Request $request): GameSession {
         return $this->raw();
     }
  
     public function getRankings(): Collection {
         return $this->raw();
     }
-
+    
 }
