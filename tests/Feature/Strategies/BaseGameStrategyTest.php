@@ -22,28 +22,14 @@ use Vesaka\Games\Tests\Traits\BindsGameSessionRepository;
  */
 class BaseGameStrategyTest extends TestCase {
 
-    use WithFaker,
-        RefreshDatabase,
-        BindsGameSessionRepository;
+    use BindsGameSessionRepository;
     
     protected Game $game;
     
     protected function setUp(): void {
         parent::setUp();
-        // Mock the authenticated user
-        $user = User::factory()->create();
-        $this->actingAs($user);
-        
-        if (!defined('HEADER_GAME_NAME')) {
-            define('HEADER_GAME_NAME', 'X-Game-Type');
-        }
-        
-        // Set the session key configuration
-        Config::set('games.session_key', 'session_id');
-        Config::set('games.identifier', '_gk');
+
         $this->bindGameSessionAlias();
-        
-        //dd(app('game.session')->getGameSlug());
         
         $this->game = new Game;
         $this->game->name = 'default';
@@ -52,7 +38,7 @@ class BaseGameStrategyTest extends TestCase {
         $this->game->status = 'active';
         $this->game->content = 'lorem ipsum';
         $this->game->parent = 0;
-        $this->game->author_id = $user->id;
+        $this->game->author_id = auth()->id();
         $this->game->saveQuietly();
         $this->game->name = 'default';
         $this->game->saveQuietly();
@@ -132,15 +118,5 @@ class BaseGameStrategyTest extends TestCase {
         
     }
     
-    protected function mockRequest(array $data = []): Request
-    {
-        $request = Request::create('/', 'POST');
-        $request->header('X-Game-Type', 'default');
-        $request->merge($data);
-        $request->setUserResolver(function () {
-            return Auth::user();
-        });
-        return $request;
-    }
 
 }
