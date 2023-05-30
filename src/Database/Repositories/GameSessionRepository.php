@@ -43,7 +43,7 @@ class GameSessionRepository extends BaseRepository implements GameSessionInterfa
         return self::$strategy;
     }
     
-    public static function getGameSlug(): string {
+    protected static function getGameSlug(): string {
         $gameKey = request()->header(HEADER_GAME_NAME);
         if (!$gameKey) {
             $gameKey = request()->get(config('games.identifier', ''));
