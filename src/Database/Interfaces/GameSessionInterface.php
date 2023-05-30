@@ -17,5 +17,6 @@ interface GameSessionInterface extends BaseInterface {
     public function end(Request $request): GameSession;
     
     public function getRankings(): Collection;
+    
 }
 
