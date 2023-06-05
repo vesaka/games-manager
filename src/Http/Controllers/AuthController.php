@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Vesaka\Games\Http\Requests\Auth\LoginRequest;
 use Vesaka\Games\Http\Requests\Auth\RegisterRequest;
+use Vesaka\Games\Models\Player;
 
 /**
  * Description of AuthController
@@ -27,23 +28,19 @@ class AuthController extends Controller {
         } catch (\Exception $ex) {
             return $ex->getMessage();
         }
-
-        //$user['token'] = $request->user()->createToken($request->token_name);
+        
         return $user;
-
-        return ['token' => $token->plainTextToken];
     }
 
     /**
      * Handle an incoming registration request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param  \Vesaka\Games\Http\Requests\Auth\RegisterRequest  $request
      *
      * @throws \Illuminate\Validation\ValidationException
      */
     public function register(RegisterRequest $request) {
-        $user = User::create([
+        $user = Player::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -55,7 +52,7 @@ class AuthController extends Controller {
 
     public function sendPasswordResetLink(Request $request) {
         $request->validate([
-            'email' => 'required|email',
+            'email' => 'required|email|exists:users,email',
         ]);
 
         $status = Password::sendResetLink(
@@ -67,7 +64,7 @@ class AuthController extends Controller {
         }
 
         throw ValidationException::withMessages([
-            'email' => [trans($status)],
+            'email' => $status,
         ]);
     }
 
