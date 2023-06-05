@@ -13,9 +13,11 @@ use Vesaka\Core\Http\Requests\ApiRequest;
 class RegisterRequest extends ApiRequest {
     public function rules() {
         return [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => ['required', 'confirmed', Password::defaults()],
+            'name' => 'required|string|alphanum|max:32|unique:users,name',
+            'email' => 'required|string|email|max:64|unique:users',
+            'password' => ['required', 'confirmed', 'string', 'max:64', Password::defaults()],
+            'accept' => 'accepted'
         ];
     }
+    
 }
