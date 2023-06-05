@@ -1,4 +1,5 @@
 <?php
+
 namespace Vesaka\Games\Models;
 
 use Vesaka\Core\Models\Model;
@@ -11,9 +12,9 @@ use Vesaka\Games\DB\Factories\GameFactory;
  */
 class Game extends Model {
     protected $attributes = [
-        'type' => 'game'
-    ]; 
-    
+        'type' => 'game',
+    ];
+
     protected static function newFactory(): GameFactory {
         return GameFactory::new();
     }

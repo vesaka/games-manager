@@ -2,7 +2,6 @@
 
 namespace Vesaka\Games\Providers;
 
-use Illuminate\Support\Facades\Route;
 use Vesaka\Core\Providers\RoutesServiceProvider as ServiceProvider;
 
 /**
@@ -11,7 +10,5 @@ use Vesaka\Core\Providers\RoutesServiceProvider as ServiceProvider;
  * @author vesak
  */
 class RoutesServiceProvider extends ServiceProvider {
-    
     protected string $alias = 'game';
-
 }

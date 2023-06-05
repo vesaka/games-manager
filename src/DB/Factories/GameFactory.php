@@ -2,20 +2,20 @@
 
 namespace Vesaka\Games\DB\Factories;
 
-use Vesaka\Games\Models\Game;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Vesaka\Games\Models\Game;
+
 /**
  * Description of GameFactory
  *
  * @author vesak
  */
 class GameFactory extends Factory {
-    
     use WithoutModelEvents;
-    
+
     protected $model = Game::class;
-    
+
     public function definition() {
         return [
             'author_id' => 1,
@@ -24,8 +24,7 @@ class GameFactory extends Factory {
             'content' => 'lorem ipsum',
             'type' => 'game',
             'status' => 'active',
-            'parent' => 0
+            'parent' => 0,
         ];
     }
-
 }

@@ -1,10 +1,12 @@
 <?php
-use Vesaka\Games\Database\Repositories;
-use Vesaka\Games\Database\Interfaces;
+
 use Vesaka\Games\Database\Cache;
+use Vesaka\Games\Database\Interfaces;
+use Vesaka\Games\Database\Repositories;
 use Vesaka\Games\Models;
-use Vesaka\Games\Observers; 
+use Vesaka\Games\Observers;
 use Vesaka\Games\Policies;
+
 return [
     'game' => [
         'model' => Models\Game::class,
@@ -21,5 +23,5 @@ return [
         'interface' => Interfaces\GameSessionInterface::class,
         'observer' => Observers\GameSessionObserver::class,
         'policy' => Policies\GameSessionPolicy::class,
-    ]
+    ],
 ];

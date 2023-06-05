@@ -19,7 +19,7 @@ return [
                     'icon' => 'add',
                     'route' => 'admin::game.index',
                 ],
-            ]
-        ]
-    ]
+            ],
+        ],
+    ],
 ];

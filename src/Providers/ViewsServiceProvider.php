@@ -10,7 +10,5 @@ use Vesaka\Core\Providers\ViewsServiceProvider as ServiceProvider;
  * @author vesak
  */
 class ViewsServiceProvider extends ServiceProvider {
-    
     protected string $namespace = __NAMESPACE__;
-
 }

@@ -2,12 +2,11 @@
 
 namespace Vesaka\Games\Tests;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Tests\TestCase;
-use App\Models\User;
 use Laravel\Sanctum\Sanctum;
+use Tests\TestCase;
 
 /**
  * Description of GameSessionTest
@@ -15,16 +14,14 @@ use Laravel\Sanctum\Sanctum;
  * @author vesak
  */
 class GameSessionTest extends TestCase {
+    use WithFaker;
+    use RefreshDatabase;
 
-    use WithFaker,
-        RefreshDatabase;
-
-//    public function test_if_game_starts() {
-//
-//        Sanctum::actingAs(User::factory()->create());
-//        $response = $this->json('post', '/api/play/start?_gk=unblockme');
-//
-//        $response->assertStatus(200);
-//    }
-
+    //    public function test_if_game_starts() {
+    //
+    //        Sanctum::actingAs(User::factory()->create());
+    //        $response = $this->json('post', '/api/play/start?_gk=unblockme');
+    //
+    //        $response->assertStatus(200);
+    //    }
 }

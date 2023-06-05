@@ -2,10 +2,10 @@
 
 namespace Vesaka\Games\DB\Factories;
 
-use Vesaka\Games\Models\Player;
 use Database\Factories\UserFactory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Vesaka\Games\Models\Player;
 
 /**
  * Description of PlayerFactory
@@ -13,7 +13,6 @@ use Illuminate\Support\Str;
  * @author vesak
  */
 class PlayerFactory extends UserFactory {
-    
     protected $model = Player::class;
 
     public function definition() {
@@ -25,5 +24,4 @@ class PlayerFactory extends UserFactory {
             'remember_token' => Str::random(10),
         ];
     }
-
 }

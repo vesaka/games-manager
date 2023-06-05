@@ -2,13 +2,13 @@
 
 namespace Vesaka\Games\Database\Repositories;
 
-use Vesaka\Core\Abstracts\BaseRepository;
-use Vesaka\Games\Models\GameSession;
-use Illuminate\Support\Collection;
-use Vesaka\Games\Database\Interfaces\GameSessionInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Vesaka\Core\Abstracts\BaseRepository;
 use Vesaka\Games\Catalogue\BaseGame;
 use Vesaka\Games\Contracts\GameHandlerContract;
+use Vesaka\Games\Database\Interfaces\GameSessionInterface;
+use Vesaka\Games\Models\GameSession;
 
 /**
  * Description of GameRepository
@@ -16,9 +16,8 @@ use Vesaka\Games\Contracts\GameHandlerContract;
  * @author Vesaka
  */
 class GameSessionRepository extends BaseRepository implements GameSessionInterface {
-
     protected static $strategy;
-    
+
     public function start(Request $request): GameSession {
         return self::getStrategy()->begin($request);
     }
@@ -30,26 +29,26 @@ class GameSessionRepository extends BaseRepository implements GameSessionInterfa
     public function getRankings(): Collection {
         return self::getStrategy()->getRanking();
     }
-    
+
     protected static function getStrategy(): GameHandlerContract {
-        if (!self::$strategy) {
-            $gameKey = static::getGameSlug(); 
-            $gameStrategy = config('games.catalogue.' . $gameKey . '.strategy');
-            if (!is_string($gameStrategy) || !class_exists($gameStrategy)) {
+        if (! self::$strategy) {
+            $gameKey = static::getGameSlug();
+            $gameStrategy = config('games.catalogue.'.$gameKey.'.strategy');
+            if (! is_string($gameStrategy) || ! class_exists($gameStrategy)) {
                 $gameStrategy = BaseGame::class;
             }
-            self::$strategy = new $gameStrategy();            
+            self::$strategy = new $gameStrategy();
         }
+
         return self::$strategy;
     }
-    
+
     protected static function getGameSlug(): string {
         $gameKey = request()->header(HEADER_GAME_NAME);
-        if (!$gameKey) {
+        if (! $gameKey) {
             $gameKey = request()->get(config('games.identifier', ''));
         }
+
         return $gameKey ?? 'default';
     }
-    
-
 }

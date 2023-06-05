@@ -11,19 +11,18 @@ use Illuminate\Http\Request;
  * @author vesak
  */
 class GameSessionController extends Controller {
-    
     public function start(Request $request) {
         return app('game.session')
-                ->start($request)
-                ->only('id', 'game_id', 'status');
+            ->start($request)
+            ->only('id', 'game_id', 'status');
     }
-    
+
     public function end(Request $request) {
         return app('game.session')
-                ->end($request)
-                ->only('id', 'game_id', 'status');
+            ->end($request)
+            ->only('id', 'game_id', 'status');
     }
-    
+
     public function leaderboard(Request $request) {
         return app('game.session')->getRankings($request);
     }

@@ -2,13 +2,12 @@
 
 namespace Vesaka\Games\DB\Seeders;
 
-use Illuminate\Database\Seeder;
-use Vesaka\Games\Models\Player;
-use Vesaka\Games\Models\GameSession;
-use Vesaka\Games\Models\Game;
-use Vesaka\Games\Catalogue\BaseGame;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-
+use Illuminate\Database\Seeder;
+use Vesaka\Games\Catalogue\BaseGame;
+use Vesaka\Games\Models\Game;
+use Vesaka\Games\Models\GameSession;
+use Vesaka\Games\Models\Player;
 
 /**
  * Description of UnblockmeGameSessionsSeeder
@@ -16,18 +15,16 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
  * @author vesak
  */
 class UnblockmeGameSessionsSeeder extends Seeder {
-
     use WithoutModelEvents;
-    
-    public function run() {
 
+    public function run() {
         $game = Game::firstOrCreate([
-                    'author_id' => 1,
-                    'content' => 'lorem ispum',
-                    'title' => 'UnblockMe',
-                    'name' => 'unblockme',
-                    'status' => 'active',
-                    'parent' => 0
+            'author_id' => 1,
+            'content' => 'lorem ispum',
+            'title' => 'UnblockMe',
+            'name' => 'unblockme',
+            'status' => 'active',
+            'parent' => 0,
         ]);
 
         for ($i = 0; $i < 20; $i++) {
@@ -45,11 +42,10 @@ class UnblockmeGameSessionsSeeder extends Seeder {
                         'level' => fake()->numberBetween(1, 15),
                         'moves' => fake()->numberBetween(5, 75),
                     ]),
-                    'info' => json_encode((new BaseGame)->fetchUserAgentInfo()),
-                    'status' => GameSession::COMPLETED
+                    'info' => json_encode((new BaseGame())->fetchUserAgentInfo()),
+                    'status' => GameSession::COMPLETED,
                 ]);
             }
         }
     }
-
 }

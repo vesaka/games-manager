@@ -2,10 +2,10 @@
 
 namespace Vesaka\Games\Tests\Feature\Strategies;
 
-use Vesaka\Games\Catalogue\Unblockme;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Http\Request as HttpRequest;
+use Illuminate\Support\Facades\Request;
 use Tests\TestCase;
+use Vesaka\Games\Catalogue\Unblockme;
 use Vesaka\Games\DB\Seeders\UnblockmeGameSessionsSeeder;
 use Vesaka\Games\Tests\Traits\BindsGameSessionRepository;
 
@@ -15,7 +15,6 @@ use Vesaka\Games\Tests\Traits\BindsGameSessionRepository;
  * @author vesak
  */
 class UnblockmeStrategyTest extends TestCase {
-
     use BindsGameSessionRepository;
 
     protected function setUp(): void {
@@ -25,7 +24,7 @@ class UnblockmeStrategyTest extends TestCase {
 
     public function test_unblockme_gets_top_scores() {
         $this->artisan('db:seed', [
-            '--class' => UnblockmeGameSessionsSeeder::class
+            '--class' => UnblockmeGameSessionsSeeder::class,
         ]);
 
         $mockRequest = new HttpRequest();
@@ -45,5 +44,4 @@ class UnblockmeStrategyTest extends TestCase {
             $this->assertLessThanOrEqual($currentScore, $game->score);
         });
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Vesaka\Games\Collections;
 
 use Illuminate\Database\Eloquent\Collection;
@@ -9,7 +10,4 @@ use Illuminate\Database\Eloquent\Collection;
  * @author Vesaka
  */
 class GameCollection extends Collection {
-
 }
-
-
