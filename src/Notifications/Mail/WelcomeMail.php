@@ -19,7 +19,7 @@ class WelcomeMail extends VerifyEmail {
      */
     protected function buildMailMessage($url) {
         return (new MailMessage())
-            ->markdown('mail.welcome')
+            ->markdown('game::mail.welcome')
             ->subject(__('Verify Email Address'))
             ->line(__('Please click the button below to verify your email address.'))
             ->action(__('Verify Email Address'), $url);
