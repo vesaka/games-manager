@@ -9,6 +9,10 @@ use Vesaka\Games\Tests\Traits\{
 };
 use Vesaka\Games\Models\Player;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\{Mail, Notification};
+use Illuminate\Notifications\Messages\MailMessage;
+use Vesaka\Games\Notifications\Mail\{WelcomeMail, ResetPasswordEmail};
+
 /**
  * Description of RegsiterTest
  *
@@ -136,10 +140,12 @@ class RegsiterTest extends TestCase {
         ]);
     }
     
-    public function testSignUpFormRegisterUser() {
+    public function testUsersRegistersReceivesEmailToVerify() {
         $password = '12345678';
         $email = 'test@example.org';
         $username = 'username';
+        
+        Notification::fake();
         $this->postValidData(self::ROUTE_NAME, [
             'email' => $email,
             'name' => $username,
@@ -153,6 +159,9 @@ class RegsiterTest extends TestCase {
             'name' => $username,
         ])->first();
         
-        $this->assertNotNull($player, 'User was registered save in database');
+        $this->assertNotNull($player, 'User was not saved in the database');
+        
+        Notification::assertSentTo($player, WelcomeMail::class);
     }
+    
 }
