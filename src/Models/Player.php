@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Vesaka\Games\DB\Factories\PlayerFactory;
 use Vesaka\Games\Notifications\Mail\WelcomeMail;
 use Vesaka\Games\Notifications\Mail\ResetPasswordEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 /* Description of Player
 *
 * @author vesak
 */
-class Player extends User {
+class Player extends User implements MustVerifyEmail {
     protected $table = 'users';
 
     protected static function newFactory(): Factory {
