@@ -13,6 +13,7 @@ use Illuminate\Validation\Rules;
 use Vesaka\Games\Http\Requests\Auth\LoginRequest;
 use Vesaka\Games\Http\Requests\Auth\RegisterRequest;
 use Vesaka\Games\Models\Player;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Description of AuthController
@@ -71,8 +72,8 @@ class AuthController extends Controller {
     public function resetPassword(Request $request) {
         $request->validate([
             'token' => 'required',
-            'email' => 'required|email',
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'email' => 'required|email|exists:users,email',
+            'password' => ['required', 'confirmed', 'max:64', Rules\Password::defaults()],
         ]);
 
         $status = Password::reset(
