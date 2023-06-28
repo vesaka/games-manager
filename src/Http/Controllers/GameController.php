@@ -33,6 +33,10 @@ class GameController extends Controller {
         ]);
     }
 
+    public function spa(Request $request) {
+        require_once public_path('/unblockme/index.html');
+    }
+
     private function getAppJsPath(string $name): string {
         return sprintf(self::APP_FILE, $name);
     }
