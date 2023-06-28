@@ -11,6 +11,8 @@ use Vesaka\Core\Http\Requests\ApiRequest;
  * @author Vesaka
  */
 class RegisterRequest extends ApiRequest {
+
+    protected string $messagesParser = 'simple';
     public function rules() {
         return [
             'name' => 'required|string|alphanum|max:32|unique:users,name',
