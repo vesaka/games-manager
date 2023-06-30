@@ -37,6 +37,10 @@ class GameController extends Controller {
         require_once public_path('/unblockme/index.html');
     }
 
+    public function deploy(Request $request) {
+        
+    }
+
     private function getAppJsPath(string $name): string {
         return sprintf(self::APP_FILE, $name);
     }
