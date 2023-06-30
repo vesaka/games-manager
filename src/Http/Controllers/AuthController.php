@@ -12,8 +12,12 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Vesaka\Games\Http\Requests\Auth\LoginRequest;
 use Vesaka\Games\Http\Requests\Auth\RegisterRequest;
+use Vesaka\Games\Http\Requests\Auth\ResetPasswordRequest;
 use Vesaka\Games\Models\Player;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Auth\Events\Verified;
+use Illuminate\Http\RedirectResponse;
+use Vesaka\Games\Http\Controllers\GameController;
 
 /**
  * Description of AuthController
@@ -60,6 +64,11 @@ class AuthController extends Controller {
             $request->only('email')
         );
 
+        Password::sendResetLink(['email' => $request->only('email')], function($user, $token) {
+            $player = Player::find($user->id);
+            $player->sendPasswordResetNotification($token);
+        });
+
         if ($status == Password::RESET_LINK_SENT) {
             return ['message' => 'Sent'];
         }
@@ -69,13 +78,7 @@ class AuthController extends Controller {
         ]);
     }
 
-    public function resetPassword(Request $request) {
-        $request->validate([
-            'token' => 'required',
-            'email' => 'required|email|exists:users,email',
-            'password' => ['required', 'confirmed', 'max:64', Rules\Password::defaults()],
-        ]);
-
+    public function resetPassword(ResetPasswordRequest $request) {
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user) use ($request) {
@@ -93,7 +96,35 @@ class AuthController extends Controller {
         }
 
         throw ValidationException::withMessages([
-            'email' => [trans($status)],
+            'password' => 'token',
         ]);
+    }
+
+    public function verifyEmail(Request $request) {
+        $player = Player::find($request->id);
+        if (!$player) {
+            return $this->getRedirectUrl($request, ['path' => '404']);
+        }
+        
+        if ($player->hasVerifiedEmail()) {
+            return $this->getRedirectUrl($request);
+        }
+
+        if ($player->markEmailAsVerified()) {
+            event(new Verified($player));
+        }
+
+        return $this->getRedirectUrl($request);
+    }
+
+    public function resetPasswordForm(Request $request) {
+        return action([GameController::class, 'spa'], [$request]);
+    }
+
+    protected function getRedirectUrl(Request $request, array $query = []): RedirectResponse {
+        return redirect()->route('game::spa', array_merge(
+            ['game' => $request->game, 'verified' => '1'],
+            $query
+        ));
     }
 }
