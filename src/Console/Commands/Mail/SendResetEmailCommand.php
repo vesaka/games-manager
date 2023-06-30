@@ -3,7 +3,8 @@ namespace Vesaka\Games\Console\Commands\Mail;
 
 use Illuminate\Console\Command;
 use Vesaka\Games\Models\Player;
-use Vesaka\Games\Notifications\Mail\WelcomeMail;
+use Vesaka\Games\Notifications\Mail\ResetPasswordEmail;
+use Illuminate\Support\Facades\Password;
 
 /**
  * Description of SendResetEmailCommand
@@ -16,7 +17,7 @@ class SendResetEmailCommand extends Command {
      *
      * @var string
      */
-    protected $signature = 'mail:welcome';
+    protected $signature = 'mail:reset';
 
     /**
      * The console command description.
@@ -26,6 +27,11 @@ class SendResetEmailCommand extends Command {
     protected $description = 'Send welcome email for new users';
     
     public function handle() {
-        Player::find(2)->notify(new WelcomeMail);
+        define('CLI_GAME_HEADER_NAME', 'unblockme');
+        $player = Player::find(2);
+        Password::sendResetLink(['email' => $player->email], function($user, $token) {
+            $player = Player::find(2);
+            $player->sendPasswordResetNotification($token);
+        });
     }
 }

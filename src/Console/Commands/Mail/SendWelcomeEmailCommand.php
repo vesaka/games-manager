@@ -26,6 +26,7 @@ class SendWelcomeEmailCommand extends Command {
     protected $description = 'Send welcome email for new users';
     
     public function handle() {
+        define('CLI_GAME_HEADER_NAME', 'unblockme');
         Player::find(2)->notify(new WelcomeMail);
     }
 }
