@@ -2,7 +2,7 @@
 
 namespace Vesaka\Games\Catalogue;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use Vesaka\Games\Models\GameSession;
 
