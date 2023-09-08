@@ -10,6 +10,9 @@ return [
         'unblockme' => [
             'strategy' => Catalogue\Unblockme::class,
         ],
+        'mg' => [
+            'strategy' => Catalogue\MemoryGame::class,
+        ],
 
     ],
 ];
