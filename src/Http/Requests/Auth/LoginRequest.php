@@ -16,30 +16,23 @@ use Vesaka\Core\Http\Requests\ApiRequest;
  */
 class LoginRequest extends ApiRequest {
     public function rules() {
-        $rules = [
-            'email' => 'required',
-            'password' => 'required',
-        ];
+        // $rules = [
+        //     'email' => 'required',
+        //     'password' => 'required',
+        // ];
 
-        if (! filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
-            $user = User::select('email')->firstOrNew([
-                'name' => $this->email,
-            ]);
-            $this->merge(['email' => $user->email ?? 'a3243']);
-        } else {
-            $rules['email'] = 'exists:users,email';
-        }
+        // if (! filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+        //     $user = User::select('email')->firstOrNew([
+        //         'name' => $this->email,
+        //     ]);
+        //     $this->merge(['email' => $user->email ?? 'a3243']);
+        // } else {
+        //     $rules['email'] = 'exists:users,email';
+        // }
 
         return [
-            'email' => 'required|exists:users,email',
+            'email' => 'required|email',
             'password' => 'required',
-        ];
-    }
-
-    public function messages() {
-        return [
-            'email.required' => 'Email is required',
-            'name.exists' => 'User not found',
         ];
     }
 
