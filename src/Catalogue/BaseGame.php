@@ -2,13 +2,12 @@
 
 namespace Vesaka\Games\Catalogue;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Jenssegers\Agent\Agent;
 use Vesaka\Games\Contracts\GameHandlerContract;
-use Vesaka\Games\Models\Game;
-use Vesaka\Games\Models\GameSession;
+use Vesaka\Games\Models\{Game, GameSession};
 
 /**
  * Description of BaseGame
@@ -16,6 +15,8 @@ use Vesaka\Games\Models\GameSession;
  * @author vesak
  */
 class BaseGame implements GameHandlerContract {
+
+    protected bool $allowsGuest = false;
     final public static function getGameId(): int {
         $gameKey = request()->header(HEADER_GAME_NAME);
         if (! $gameKey) {
