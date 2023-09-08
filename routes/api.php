@@ -11,6 +11,7 @@ Route::post('send-password-reset-link', [AuthController::class, 'sendPasswordRes
 Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('reset-password');
 Route::get('leaderboard', [GameSessionController::class, 'leaderboard'])->name('leaderboard');
 
+Route::post('guest', [AuthController::class, 'createGuest'])->name('guest');
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('/play')->group(function () {
         Route::post('/start', [GameSessionController::class, 'start']);
