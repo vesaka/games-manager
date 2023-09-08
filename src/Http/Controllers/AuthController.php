@@ -10,15 +10,12 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
-use Vesaka\Games\Http\Requests\Auth\LoginRequest;
-use Vesaka\Games\Http\Requests\Auth\RegisterRequest;
-use Vesaka\Games\Http\Requests\Auth\ResetPasswordRequest;
+use Vesaka\Games\Http\Requests\Auth\{LoginRequest, RegisterRequest, ResetPasswordRequest, CreateGuestRequest};
 use Vesaka\Games\Models\Player;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\RedirectResponse;
 use Vesaka\Games\Http\Controllers\GameController;
-
 /**
  * Description of AuthController
  *
@@ -53,6 +50,22 @@ class AuthController extends Controller {
         event(new Registered($user));
 
         return $user->only('id', 'name');
+    }
+
+    public function createGuest(CreateGuestRequest $request) {
+        $name = Str::random(10);
+        $player = Player::create([
+            'name' => $name,
+            'email' => $name.'@guest.com',
+            'password' => Hash::make(Str::random(10)),
+        ]);
+        $player->markEmailAsVerified();  
+        $player->save();
+
+        $user = $player->only('id', 'name');
+        $user['token'] = $player->createToken($request->header('User-Agent'))->plainTextToken;
+
+        return $user;
     }
 
     public function sendPasswordResetLink(Request $request) {
