@@ -54,5 +54,9 @@ class GamesServiceProvider extends BaseServiceProvider {
         if (! defined('HEADER_GAME_NAME')) {
             define('HEADER_GAME_NAME', 'X-Game-Type');
         }
+
+        if(!defined('GUEST_EMAIL_DOMAIN')) {
+            define('GUEST_EMAIL_DOMAIN', '@guest.com');
+        }
     }
 }

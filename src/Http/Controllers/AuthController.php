@@ -56,7 +56,7 @@ class AuthController extends Controller {
         $name = Str::random(10);
         $player = Player::create([
             'name' => $name,
-            'email' => $name.'@guest.com',
+            'email' => $name . GUEST_EMAIL_DOMAIN,
             'password' => Hash::make(Str::random(10)),
         ]);
         $player->markEmailAsVerified();  
