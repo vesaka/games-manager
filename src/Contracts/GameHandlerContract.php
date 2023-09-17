@@ -16,7 +16,7 @@ interface GameHandlerContract {
 
     public function save(Request $request): GameSession;
 
-    public function calculate(Request $request): int|float;
+    public function calculate(Request $request, GameSession $gameSession): int|float;
 
     public function getRanking(int $limit = 10): Collection;
 }
