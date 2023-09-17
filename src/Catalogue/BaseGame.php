@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use Jenssegers\Agent\Agent;
 use Vesaka\Games\Contracts\GameHandlerContract;
 use Vesaka\Games\Models\{Game, GameSession};
+use Illuminate\Support\Str;
 
 /**
  * Description of BaseGame
@@ -35,8 +36,9 @@ class BaseGame implements GameHandlerContract {
         $gameSession->game_id = self::getGameId();
         $gameSession->user_id = $request->user()->id;
         $gameSession->started_at = now();
-        $gameSession->payload = [];
         $gameSession->info = $this->getUserAgentInfo();
+        $gameSession->hash =  Str::random(32);
+        $gameSession->status = GameSession::ACTIVE;
         $gameSession->save();
 
         return $gameSession;
@@ -47,16 +49,30 @@ class BaseGame implements GameHandlerContract {
             ->where('user_id', $request->user()->id)
             ->where('game_id', self::getGameId())
             ->first();
-
+        $gameSession->payload = $request->payload ?? [];
         $gameSession->ended_at = now();
-        $gameSession->score = $this->calculate($request);
+        $gameSession->score = $this->calculate($request, $gameSession);
         $gameSession->status = GameSession::COMPLETED;
+        
         $gameSession->save();
 
         return $gameSession;
     }
 
-    public function calculate(Request $request): int|float {
+    public function cancel(Request $request): GameSession {
+        $gameSession = GameSession::where('id', $request->get(config('games.session_key')))
+            ->where('user_id', $request->user()->id)
+            ->where('game_id', self::getGameId())
+            ->first();
+
+        $gameSession->ended_at = now();
+        $gameSession->status = GameSession::FAILED;
+        $gameSession->save();
+
+        return $gameSession;
+    }
+
+    public function calculate(Request $request, GameSession $gameSession): int|float {
         return $request->score;
     }
 
@@ -111,4 +127,14 @@ class BaseGame implements GameHandlerContract {
     public function fetchUserAgentInfo(): array {
         return $this->getUserAgentInfo();
     }
+
+    public function decrypt(Request $request): array {
+        if (! $request->payload) {
+            return [];
+        }
+
+
+        //return decrypt();
+    }
+
 }
