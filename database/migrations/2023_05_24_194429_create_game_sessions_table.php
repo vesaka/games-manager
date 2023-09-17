@@ -18,6 +18,7 @@ return new class() extends Migration {
             $table->mediumInteger('score');
             $table->json('payload')->nullable();
             $table->json('info')->nullable();
+            $table->string('hash', 128)->nullable();
             $table->string('status', 64);
             $table->timestamps();
         });
