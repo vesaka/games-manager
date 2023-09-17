@@ -9,9 +9,12 @@ use Illuminate\Http\Request;
 
 class MemoryGame extends BaseGame {
 
-    public function calculate(Request $request): int {
-        $levels = $request->levels;
-        list($time, $moves) = array_reduce($levels, function($acc, $level) {
+    public function calculate(Request $request, GameSession $gameSession): int {
+        $data = $gameSession->getData(true);
+        if (! $data || ! isset($data['levels'])) {
+            return 0;
+        }
+        list($time, $moves) = array_reduce($data['levels'], function($acc, $level) {
             $acc[0] += $level['time'];
             $acc[1] += $level['moves'];
             return $acc;
