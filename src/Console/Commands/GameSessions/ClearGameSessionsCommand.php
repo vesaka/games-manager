@@ -2,6 +2,7 @@
 namespace Vesaka\Games\Console\Commands\GameSessions;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class ClearGameSessionsCommand extends Command {
 
@@ -11,7 +12,7 @@ class ClearGameSessionsCommand extends Command {
 
     public function handle() {
         $this->info('Clearing game sessions...');
-        $count = \DB::table('game_sessions')->delete();
+        $count = DB::table('game_sessions')->delete();
         $this->info("Cleared $count game sessions");
     }
 }
