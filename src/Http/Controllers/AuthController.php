@@ -4,12 +4,11 @@ namespace Vesaka\Games\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Auth\Events\Registered;
+use Illuminate\Auth\Events\{Registered, Authenticated};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rules;
 use Vesaka\Games\Http\Requests\Auth\{LoginRequest, RegisterRequest, ResetPasswordRequest, CreateGuestRequest};
 use Vesaka\Games\Models\Player;
 use Illuminate\Validation\ValidationException;
@@ -30,7 +29,7 @@ class AuthController extends Controller {
         } catch (\Exception $ex) {
             return $ex->getMessage();
         }
-        
+        event(new Authenticated('sanctum', $request->user()));
         return $user;
     }
 
