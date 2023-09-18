@@ -3,25 +3,30 @@
 namespace Vesaka\Games\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Auth\Events\{Registered, Authenticated};
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\{PasswordReset, Registered, Authenticated, Verified};
+use Illuminate\Http\{Request, RedirectResponse};
+use Illuminate\Support\Facades\{Hash, Password};
 use Illuminate\Support\Str;
-use Vesaka\Games\Http\Requests\Auth\{LoginRequest, RegisterRequest, ResetPasswordRequest, CreateGuestRequest};
+use Vesaka\Games\Http\Requests\Auth\{
+    LoginRequest,
+    RegisterRequest,
+    ResetPasswordRequest,
+    ForgotPasswordRequest,
+    CreateGuestRequest
+};
 use Vesaka\Games\Models\Player;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Auth\Events\Verified;
-use Illuminate\Http\RedirectResponse;
 use Vesaka\Games\Http\Controllers\GameController;
+
 /**
  * Description of AuthController
  *
  * @author vesak
  */
-class AuthController extends Controller {
-    public function login(LoginRequest $request) {
+class AuthController extends Controller
+{
+    public function login(LoginRequest $request)
+    {
         $request->authenticate();
         try {
             $user = $request->user()->only('id', 'name');
@@ -40,7 +45,8 @@ class AuthController extends Controller {
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function register(RegisterRequest $request) {
+    public function register(RegisterRequest $request)
+    {
         $user = Player::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -51,14 +57,15 @@ class AuthController extends Controller {
         return $user->only('id', 'name');
     }
 
-    public function createGuest(CreateGuestRequest $request) {
+    public function createGuest(CreateGuestRequest $request)
+    {
         $name = Str::random(10);
         $player = Player::create([
             'name' => $name,
             'email' => $name . GUEST_EMAIL_DOMAIN,
             'password' => Hash::make(Str::random(10)),
         ]);
-        $player->markEmailAsVerified();  
+        $player->markEmailAsVerified();
         $player->save();
 
         $user = $player->only('id', 'name');
@@ -67,16 +74,13 @@ class AuthController extends Controller {
         return $user;
     }
 
-    public function sendPasswordResetLink(Request $request) {
-        $request->validate([
-            'email' => 'required|email|exists:users,email',
-        ]);
+    public function sendPasswordResetLink(ForgotPasswordRequest $request) {
 
         $status = Password::sendResetLink(
             $request->only('email')
         );
 
-        Password::sendResetLink(['email' => $request->only('email')], function($user, $token) {
+        Password::sendResetLink(['email' => $request->only('email')], function ($user, $token) {
             $player = Player::find($user->id);
             $player->sendPasswordResetNotification($token);
         });
@@ -90,7 +94,8 @@ class AuthController extends Controller {
         ]);
     }
 
-    public function resetPassword(ResetPasswordRequest $request) {
+    public function resetPassword(ResetPasswordRequest $request)
+    {
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user) use ($request) {
@@ -112,12 +117,13 @@ class AuthController extends Controller {
         ]);
     }
 
-    public function verifyEmail(Request $request) {
+    public function verifyEmail(Request $request)
+    {
         $player = Player::find($request->id);
         if (!$player) {
             return $this->getRedirectUrl($request, ['path' => '404']);
         }
-        
+
         if ($player->hasVerifiedEmail()) {
             return $this->getRedirectUrl($request);
         }
@@ -129,11 +135,13 @@ class AuthController extends Controller {
         return $this->getRedirectUrl($request);
     }
 
-    public function resetPasswordForm(Request $request) {
+    public function resetPasswordForm(Request $request)
+    {
         return action([GameController::class, 'spa'], [$request]);
     }
 
-    protected function getRedirectUrl(Request $request, array $query = []): RedirectResponse {
+    protected function getRedirectUrl(Request $request, array $query = []): RedirectResponse
+    {
         return redirect()->route('game::spa', array_merge(
             ['game' => $request->game, 'verified' => '1'],
             $query
