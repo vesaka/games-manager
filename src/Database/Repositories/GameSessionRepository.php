@@ -3,7 +3,7 @@
 namespace Vesaka\Games\Database\Repositories;
 
 use Vesaka\Core\Abstracts\BaseRepository;
-use Vesaka\Games\Models\GameSession;
+use Vesaka\Games\Models\{Player, GameSession};
 use Illuminate\Support\Collection;
 use Vesaka\Games\Database\Interfaces\GameSessionInterface;
 use Illuminate\Http\Request;
@@ -56,5 +56,10 @@ class GameSessionRepository extends BaseRepository implements GameSessionInterfa
         return $gameKey ?? 'default';
     }
     
+    public function transfer(Player $guest, Player $player): void {
+        $this->model->where('user_id', $guest->id)
+            ->update(['user_id' => $player->id]);
+    }
+
 
 }

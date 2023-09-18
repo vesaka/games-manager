@@ -2,7 +2,7 @@
 
 namespace Vesaka\Games\Database\Cache;
 use Vesaka\Core\Abstracts\BaseCache;
-use Vesaka\Games\Models\GameSession;
+use Vesaka\Games\Models\{Player, GameSession};
 use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 use Vesaka\Games\Database\Interfaces\GameSessionInterface;
@@ -25,6 +25,10 @@ class GameSessionCache extends BaseCache implements GameSessionInterface {
  
     public function getRankings(): Collection {
         return $this->raw();
+    }
+
+    public function transfer(Player $guest, Player $player): void {
+        $this->raw();
     }
     
 }
