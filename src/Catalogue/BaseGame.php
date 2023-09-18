@@ -128,13 +128,4 @@ class BaseGame implements GameHandlerContract {
         return $this->getUserAgentInfo();
     }
 
-    public function decrypt(Request $request): array {
-        if (! $request->payload) {
-            return [];
-        }
-
-
-        //return decrypt();
-    }
-
 }
