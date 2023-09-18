@@ -7,7 +7,7 @@ use Vesaka\Games\Http\Controllers\GameSessionController;
 
 Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::post('register', [AuthController::class, 'register'])->name('register');
-Route::post('send-password-reset-link', [AuthController::class, 'sendPasswordResetLink'])->name('forgot-password');
+Route::post('forgot-password', [AuthController::class, 'sendPasswordResetLink'])->name('forgot-password');
 Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('reset-password');
 Route::get('leaderboard', [GameSessionController::class, 'leaderboard'])->name('leaderboard');
 
