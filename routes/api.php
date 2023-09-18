@@ -21,7 +21,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/player', function (Request $request) {
         $user = $request->user()->only('id', 'name');
-        $user['token'] = $request->user()->currentAccessToken();
+        $user['token'] = $request->user()->currentAccessToken()->plainTextToken;
 
         return $user;
     })->name('user');
