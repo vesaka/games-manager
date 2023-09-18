@@ -3,15 +3,15 @@
 namespace Vesaka\Games\Listeners;
 
 use Vesaka\Games\Models\{Player, GameSession};
-use Illuminate\Auth\Events\Authenticated;
+use Illuminate\Auth\Events\{Registered, Authenticated};
 
 class TransferGuestToPlayer
 {
 
-    public function handle(Authenticated $event): void
+    public function handle(Registered|Authenticated $event): void
     {
 
-        if (auth()->user()->isGuest) {
+        if (auth()->check() && auth()->user()->isGuest) {
             $guest = Player::find(auth()->id());
             $player = Player::find($event->user->id);
             app('game.session')->transfer($guest, $player);
