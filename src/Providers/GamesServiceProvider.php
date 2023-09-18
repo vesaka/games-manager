@@ -3,10 +3,17 @@
 namespace Vesaka\Games\Providers;
 
 use Vesaka\Core\Providers\BaseServiceProvider;
-use Vesaka\Core\Traits\Providers\CliProviderTrait;
-use Vesaka\Core\Traits\Providers\ConfigProviderTrait;
-use Vesaka\Core\Traits\Providers\RoutesProviderTrait;
-use Vesaka\Core\Traits\Providers\ViewsProviderTrait;
+use Vesaka\Core\Traits\Providers\{
+    CliProviderTrait,
+    ConfigProviderTrait,
+    RoutesProviderTrait,
+    ViewsProviderTrait,
+    EventsProviderTrait
+};
+
+use Illuminate\Auth\Events\{Registered, Authenticated};
+use Vesaka\Games\Listeners\TransferGuestToPlayer;
+
 
 /**
  * Description of GamesServiceProvider
@@ -19,6 +26,7 @@ class GamesServiceProvider extends BaseServiceProvider {
     use ViewsProviderTrait;
     use RoutesProviderTrait;
     use CliProviderTrait;
+    use EventsProviderTrait;
 
     protected $routes = [
         'web' => [
@@ -42,10 +50,20 @@ class GamesServiceProvider extends BaseServiceProvider {
         'game:exists' => \Vesaka\Games\Http\Middleware\EnsureGameExists::class,
     ];
 
+    protected $events = [
+        Registered::class => [
+            TransferGuestToPlayer::class,
+        ],
+        Authenticated::class => [
+            TransferGuestToPlayer::class,
+        ],
+    ];
+
     protected string $title = 'game';
 
     public function register(): void {
         $this->configs();
+        $this->registerEvents();
         $this->registerViews();
         $this->registerRoutes();
         $this->registerAdminRoutes();
