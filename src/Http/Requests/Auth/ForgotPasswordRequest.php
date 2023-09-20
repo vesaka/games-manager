@@ -9,7 +9,7 @@ class ForgotPasswordRequest extends ApiRequest {
 
     public function rules() {
         return [
-            'email' => 'required|email|exists:users,email',
+            'email' => ['required', 'email', 'exists:users,email'],
         ];
         
     }
