@@ -47,14 +47,15 @@ class ResetPasswordTest extends TestCase {
 
     public function testResetPasswordFormRejectsInvalidOrExpiredTokens() {
         $user = Player::factory()->create();
-        $token = Password::broker()->createToken($user);
-        Password::broker()->deleteToken($user);
+        // $token = Password::createToken($user);
+        // Password::deleteToken($user);
         $password = Str::random(10);
         $this->postInvalidData(self::ROUTE_NAME, [
-                'email' => $user->email,
-                'token' => $token,
                 'password' => $password,
-                'password_confirmation' => $password
+                'password_confirmation' => $password,
+                'token' => 'invalid-token',
+                'email' => $user->email,
+                
         ]);
     }
     
@@ -88,7 +89,7 @@ class ResetPasswordTest extends TestCase {
    
     public function testUserResetsTheirPasswordSuccessfully() {
         $user = Player::factory()->create();
-        $token = Password::broker()->createToken($user);
+        $token = Password::createToken($user);
         $password = Str::random(10);
         $this->postValidData(self::ROUTE_NAME, [
                 'email' => $user->email,
